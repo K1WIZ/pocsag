@@ -1,17 +1,15 @@
 // sendpocsag
 
 // receive POCSAG-message from serial port
-// transmit message on 433.900 Mhz using si4432-based "RF22" ISM modules
+// transmit message using si4432-based "RF22" ISM modules
 
-// This is the "non-ham" version of the application. All references
+// This is the general purpose version of the application. All references
 // to ham call-signs and the CW beacon has been removed
 
 // this program uses the arduino RadioHead library
 // http://www.airspayce.com/mikem/arduino/RadioHead/
 
-
-
-// (c) 2014 Kristoff Bonne (ON1ARF)
+// Changes: Modified freq ranges
 
 /*
  *  This program is free software; you can redistribute it and/or
@@ -500,8 +498,8 @@ if (state == -2) {
   
 
   // ISM band: 434.050 to 434.800 and 863 to 870
-  if ( ((newfreq >= 433.050F) && (newfreq <= 434.8F)) || 
-      ((newfreq >= 863.0) && (newfreq < 870.0F)) ) {
+  if ( ((newfreq >= 430.0F) && (newfreq <= 470.0F)) || 
+      ((newfreq >= 902.0) && (newfreq < 928.0F)) ) {
     Serial.print("switching to new frequency: ");
     Serial.println(newfreq);
     
