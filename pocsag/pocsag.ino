@@ -61,17 +61,17 @@ void setup()
 
   // Set frequency. AfcPullinRange set to 50 Khz (unused, we are not receiving)
   //  rf22.setFrequency(433.9000, 0.00);
-  rf22.setFrequency(433.8700, 0.050); // subtract 30 Khz for crystal correction
+  rf22.setFrequency(439.9875, 0.000); // subtract 30 Khz for crystal correction
                                           // this correction-value will differ per device.
                                           // to be determined experimental
 
 
-  // set to 512 bps FSK, 4.5 Khz deviation (POCSAG 512)
-  rf22.setModemConfig(RH_RF22::FSK_Rb_512Fd4_5 ); 
+  // set to 1200 bps FSK, 4.5 Khz deviation (POCSAG 512)
+  rf22.setModemConfig(RH_RF22::FSK_Rb_1200Fd4_5 ); 
 
 
-  // 6 mW TX power (EU ISM legislation)
-  rf22.setTxPower(RH_RF22_TXPOW_8DBM);
+  // full TX power
+  rf22.setTxPower(RH_RF22_TXPOW_20DBM);
   
 }
 
@@ -98,8 +98,8 @@ int freq2; // freq. 100 Hz part (4 digits)
 // format: "P <address> <source> <repeat> <message>"
 // format: "F <freqmhz> <freq100Hz>"
 
-Serial.println("POCSAG text-message tool v0.1 (non-ham):");
-Serial.println("https://github.com/on1arf/pocsag");
+Serial.println("POCSAG text-message tool v0.1 (general use):");
+Serial.println("https://github.com/k1wiz/pocsag");
 Serial.println("");
 Serial.println("Format:");
 Serial.println("P <address> <source> <repeat> <message>");
@@ -282,12 +282,12 @@ char c;
   }; // end state 7
 
 
-  // state 8: message, up to 40 chars, terminate with cr (0x0d) or lf (0x0a)
+  // state 8: message, up to 80 chars, terminate with cr (0x0d) or lf (0x0a)
   if (state == 8) {
     // accepted is everything between space (ascii 0x20) and ~ (ascii 0x7e)
     if ((c >= 0x20) && (c <= 0x7e)) {
-      // accept up to 40 chars
-      if (msgsize < 40) {
+      // accept up to 80 chars
+      if (msgsize < 80) {
         Serial.write(c);
 
         textmsg[msgsize]=c;
@@ -497,9 +497,9 @@ if (state == -2) {
   newfreq=((float)freq1)+((float)freq2)/10000.0F; // f1 = MHz, F2 = 100 Hz
   
 
-  // ISM band: 434.050 to 434.800 and 863 to 870
+  // Establish Frequency
   if ( ((newfreq >= 430.0F) && (newfreq <= 470.0F)) || 
-      ((newfreq >= 902.0) && (newfreq < 928.0F)) ) {
+      ((newfreq >= 902.0) && (newfreq < 932.0F)) ) {
     Serial.print("switching to new frequency: ");
     Serial.println(newfreq);
     
@@ -508,7 +508,7 @@ if (state == -2) {
     rf22.setFrequency(freq, 0.05); // set frequency, AfcPullinRange not used (receive-only)
     
   } else {
-    Serial.print("Error: invalid frequency (should be 433.050-434.800 or 853-8670 Mhz) ");
+    Serial.print("Error: invalid frequency (should be 430.0000-470.0000 or 902.0-932.0 Mhz) ");
     Serial.println(newfreq);
   }; // end if
 }; // end function F (frequency)
